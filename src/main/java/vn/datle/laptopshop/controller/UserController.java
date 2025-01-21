@@ -1,6 +1,7 @@
 package vn.datle.laptopshop.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,9 +34,17 @@ public class UserController {
     }
 
     @RequestMapping("/")
-    public String getHomepage() {
+    public String getHomepage(Model model) {
         String message = this.service.handleHello();
+        model.addAttribute("message", message);
         return "hello";
+    }
+
+    @RequestMapping("/admin/user")
+    public String getUserPage(Model model) {
+        String message = this.service.handleHello();
+        model.addAttribute("message", message);
+        return "admin/user/create";
     }
 
 }
