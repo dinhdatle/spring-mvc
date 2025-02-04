@@ -1,41 +1,37 @@
 package vn.datle.laptopshop.controller;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import vn.datle.laptopshop.domain.User;
 import vn.datle.laptopshop.service.UserService;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-// @RestController
-// public class UserController {
-//     private final UserService service;
-
-//     public UserController(UserService service) {
-//         this.service = service;
-//     }
-
-//     @GetMapping("/")
-//     public String getHomepage() {
-//         return this.service.handleHello();
-//     }
-
-// }
 @Controller
 public class UserController {
-    private final UserService service;
+    private UserService userService;
 
-    public UserController(UserService service) {
-        this.service = service;
+    public UserController(UserService userService) {
+        this.userService = userService;
     }
 
-    @RequestMapping("/")
-    public String getHomepage() {
-        String message = this.service.handleHello();
-        return "hello";
+    @GetMapping("/admin/user/create")
+    public String getCreateUserPage(Model model) {
+        model.addAttribute("user", new User());
+        return "admin/user/create";
+    }
+
+    @PostMapping("/admin/user/create")
+    public String create(User user) {
+        userService.saveUser(user);
+        return "redirect:/admin/user/table-user";
+    }
+
+    @GetMapping("/admin/user/table-user")
+    public String getTableUserPage(Model model) {
+        model.addAttribute("users", userService.getAllUsers());
+        return "admin/user/table-user";
     }
 
 }
