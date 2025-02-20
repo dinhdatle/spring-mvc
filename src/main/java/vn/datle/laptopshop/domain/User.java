@@ -1,70 +1,57 @@
 package vn.datle.laptopshop.domain;
 
+import java.util.List;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+
+@Entity
+@Table(name = "users")
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String password;
-
+    @NotBlank(message = "Email is required")
+    @Email()
     private String email;
 
-    private String phoneNumber;
+    @NotNull
+    @Size(min = 6, message = "Password must be at least 6 characters")
+    private String password;
 
-    private String address;
-
+    @NotNull
+    @Size(min = 6, message = "Full name must be at least 6 characters")
     private String fullName;
 
-    public Long getId() {
-        return id;
-    }
+    private String address;
+    private String phone;
+    private String avatar;
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-    public String getPassword() {
-        return password;
-    }
+    @OneToMany(mappedBy = "user")
+    private List<Order> orders;
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    @Override
-    public String toString() {
-        return "Id " + id + ", email " + email + ", password " + password + ", phone number " + phoneNumber
-                + ", address " + address + ", full name " + fullName;
-    }
+    @OneToOne(mappedBy = "user")
+    private Cart cart;
 
 }
